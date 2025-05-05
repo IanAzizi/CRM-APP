@@ -1,45 +1,55 @@
-// index.js
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
-app.use(cors());
+
+// CORS Options برای تست
+const corsOptions = {
+  origin: 'http://office.bandarabbasmall.com:3000',
+  credentials: true
+};
+  
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
 app.use(express.json());
 
+// مقدار پیش‌فرض localhost
 const PORT = process.env.PORT || 5000;
+const HOST = '0.0.0.0'; // به‌صورت دستی مقدار دهی شد تا همیشه روی لوکال اجرا بشه
 
-// تست اصلی که بررسی می‌کند که سرور در حال اجراست
-app.get('/', (req, res) => {
-  res.send('Security App Backend Running');
-});
-
-// اتصال به MongoDB (بدون گزینه‌های deprecated)
-mongoose.connect(process.env.MONGO_URI)
+// اتصال به MongoDB
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("✅ Connected to MongoDB");
 
     // راه‌اندازی سرور
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`🚀 Server is running on port ${PORT}`);
     });
+    
   })
   .catch((err) => {
     console.error("❌ MongoDB connection error:", err);
   });
 
-// استفاده از مسیرها
+// تست ساده
+app.get('/', (req, res) => {
+  res.send('Security App Backend Running');
+});
+
+// مسیرها
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
 
 const checklistRoutes = require('./routes/checklist');
 app.use('/api/checklist', checklistRoutes);
 
-const storeVisitRoutes = require('./routes/storeVisit');
+const storeVisitRoutes = require('./routes/storeVisit'); // بدون اسلش آخر
 app.use('/api/storeVisit', storeVisitRoutes);
 
-// اضافه کردن مسیر برای CustomerVisit
 const customerVisitRoutes = require('./routes/CustomerVisit');
 app.use('/api/customerVisit', customerVisitRoutes);
 
