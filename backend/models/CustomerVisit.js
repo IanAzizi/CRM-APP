@@ -7,7 +7,7 @@ const customerVisitSchema = new mongoose.Schema({
   description: String,
   location: {
     type: String,
-    enum: ['سینما', 'فروشگاه ها', 'هایپر استار', 'رستوران مارماریس', 'فود کورت', 'کافه ها']
+    enum: ['بندرعباس مال','سینما', 'فروشگاه ها', 'هایپر استار', 'رستوران مارماریس', 'فود کورت', 'کافه ها']
   }
 });
 

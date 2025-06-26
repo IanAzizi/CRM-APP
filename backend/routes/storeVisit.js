@@ -87,6 +87,20 @@ router.get('/export/excel', auth, async (req, res) => {
     res.status(500).json({ message: 'خطا در ایجاد فایل اکسل', error: err.message });
   }
 });
+// حذف همه بازدیدها (فقط مدیر)
+
+router.delete('/delete/all', auth, async (req, res) => {
+  try {
+    if (!req.user.role || req.user.role !== 'manager') {
+      return res.status(403).json({ message: 'شما مجاز به حذف نیستید' });
+    }
+
+    const result = await StoreVisit.deleteMany({});
+    res.json({ message: `تمام ${result.deletedCount} بازدید با موفقیت حذف شد` });
+  } catch (err) {
+    res.status(500).json({ message: 'خطا در حذف همه بازدیدها', error: err.message });
+  }
+});
 
 // حذف بازدید (فقط مدیر)
 router.delete('/:id', auth, async (req, res) => {
@@ -106,5 +120,8 @@ router.delete('/:id', auth, async (req, res) => {
     res.status(500).json({ message: 'خطا در حذف بازدید', error: err.message });
   }
 });
+
+
+
 
 module.exports = router;
