@@ -10,7 +10,7 @@ const jalaali = require('jalaali-js');
 // ثبت ورود و خروج فروشگاه
 router.post('/submit', authMiddleware, async (req, res) => {
   try {
-    const { storeName, storePlate, date, checkIn, checkOut } = req.body;
+    const { storeName, storePlate, date, checkIn, checkOut, closureReason } = req.body;
 
     if (!storeName || !storePlate || !date || !checkIn || !checkOut) {
       return res.status(400).json({ message: 'لطفاً همه فیلدهای الزامی را پر کنید' });
@@ -22,6 +22,7 @@ router.post('/submit', authMiddleware, async (req, res) => {
       date,
       checkIn,
       checkOut,
+      closureReason, // ⬅ اضافه شده
       createdBy: req.user.id,
     });
 
@@ -56,10 +57,12 @@ router.get('/export/excel', auth, async (req, res) => {
 
     worksheet.columns = [
       { header: 'نام', key: 'name', width: 20 },
+      { header: 'نام فروشگاه', key: 'storeName', width: 20 },
       { header: 'پلاک فروشگاه', key: 'storePlate', width: 15 },
       { header: 'تاریخ (شمسی)', key: 'date', width: 15 },
       { header: 'ساعت ورود', key: 'checkIn', width: 10 },
       { header: 'ساعت خروج', key: 'checkOut', width: 10 },
+      { header: 'دلیل تعطیلی', key: 'closureReason', width: 20 }, // ⬅ اضافه شده
     ];
 
     visits.forEach((v) => {
@@ -68,10 +71,12 @@ router.get('/export/excel', auth, async (req, res) => {
 
       worksheet.addRow({
         name: v.createdBy?.name || 'نامشخص',
+        storeName: v.storeName,
         storePlate: v.storePlate,
         date: formattedDate,
         checkIn: v.checkIn,
         checkOut: v.checkOut,
+          closureReason: v.closureReason || '', // ⬅ اضافه شده
       });
     });
 
