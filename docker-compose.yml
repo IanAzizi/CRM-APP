@@ -1,0 +1,12 @@
+services:
+    app:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      ports:
+        - "5000:5000"
+      environment:
+        # Ensure you set these in a .env file or export them on the server
+        - MONGO_URI=${MONGO_URI}
+        - PORT=5000
+      restart: always 

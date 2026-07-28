@@ -12,8 +12,12 @@ const corsOptions = {
   credentials: true,
 };
 
+// اعمال CORS برای همه درخواست‌ها
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+
+// فقط در صورتی که نیاز به کنترل دستی preflight دارید، این خط را نگه دارید
+// (در بیشتر موارد با app.use(cors()) کافی است → نیازی به app.options نیست)
+app.options("/{*path}", cors(corsOptions));   // ← اصلاح مهم همینجاست
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -22,38 +26,42 @@ app.use(express.urlencoded({ extended: true }));
 const registerUnitRoutes = require('./routes/registerUnit');
 app.use('/api/register-unit', registerUnitRoutes);
 
-// Other API routes
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
+
 const checklistRoutes = require('./routes/checklist');
 app.use('/api/checklist', checklistRoutes);
+
 const storeVisitRoutes = require('./routes/storeVisit');
 app.use('/api/storeVisit', storeVisitRoutes);
+
 const customerVisitRoutes = require('./routes/CustomerVisit');
 app.use('/api/customerVisit', customerVisitRoutes);
 
-// Serve static files (e.g., React build) AFTER API routes
-app.use(express.static(path.join(__dirname, '../frontend/build')));
+// Serve static files (React/Vite build)
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
-// Catch-all for React app (single-page app routing)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
+// Catch-all برای SPA (باید آخرین باشد)
+app.get("/{*path}", (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
-// Default to localhost
+// اگر می‌خوای تست کنی که سرور بالا آمده
+app.get('/', (req, res) => {
+  res.send('Security App Backend Running');
+});
+
 const PORT = process.env.PORT || 5000;
 const HOST = '0.0.0.0';
 
-// Connect to MongoDB
+// تنظیمات mongoose
+mongoose.set('strictPopulate', false);
+
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ Connected to MongoDB');
 
-    // Start server
     app.listen(PORT, HOST, () => {
       console.log(`🚀 Server is running on http://${HOST}:${PORT}`);
     });
@@ -62,15 +70,7 @@ mongoose
     console.error('❌ MongoDB connection error:', err);
   });
 
-// Test route
-app.get('/', (req, res) => {
-  res.send('Security App Backend Running');
-});
-
-// MongoDB settings
-mongoose.set('strictPopulate', false);
-
-// Global error handler
+// Global error handler (آخرین middleware)
 app.use((err, req, res, next) => {
   console.error('Global error:', err.stack);
   res.status(500).json({ error: 'Something went wrong!' });

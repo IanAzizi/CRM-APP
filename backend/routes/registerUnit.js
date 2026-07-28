@@ -28,13 +28,13 @@ router.post('/', cpUpload, async (req, res) => {
     ) {
       return res.status(400).json({ error: 'داده‌های پرسنل نامعتبر است' });
     }
-
+    
     const formData = {
       ...req.body,
       personnel: req.body.personnel_name?.map((_, i) => ({
         name: req.body.personnel_name[i],
         phone: req.body.personnel_phone[i],
-        nationalCode: req.body.personnel_national_code[i],
+        nationalCode: req.body.personnel_national_code[i],   
       })) || [],
       files: {
         license: req.files?.license_file?.[0]?.path || null,

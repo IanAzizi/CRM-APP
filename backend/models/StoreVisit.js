@@ -8,7 +8,7 @@ const storeVisitSchema = new mongoose.Schema({
   checkOut: { type: String, required: true },
   closureReason: {
     type: String,
-    enum: ['پلمپ', 'قطعی برق' , 'تغییردکوراسیون' , 'عدم اجازه از سوی مدیریت ' , ''],
+    enum: ['پلمپ', 'قطعی برق' , 'تغییردکوراسیون' , 'عدم اجازه از سوی مدیریت ' , 'تعطیلی غیر موجه' , 'تعطیلی هماهنگ شده' , ''],
     default: '',
   },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
