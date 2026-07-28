@@ -1,0 +1,76 @@
+@font-face {
+  font-family: 'iransans';
+  src: url('./pages/IRANSANS MEDIUM.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+*{
+  font-family: 'iransans', sans-serif;
+  direction: rtl;
+}
+
+.crm-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  font-family: "DoranFaNum", sans-serif;
+}
+
+.crm-form {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 2rem;
+}
+
+.crm-form input, .crm-submit-btn {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.crm-submit-btn {
+  background-color: #2a5298;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.crm-archive-msg {
+  font-size: 0.9rem;
+  color: #007bff;
+}
+
+.crm-clear-btn {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.crm-visit-list {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+}
+
+.crm-visit-item {
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
